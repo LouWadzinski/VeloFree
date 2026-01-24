@@ -1,12 +1,16 @@
 <H1>VeloFree: Free Your Peloton</H1>
 
-VeloFree is an application that allows users of Peloton Bikes to view the metrics of their activities while riding, Broadcasts those metrics via BLE to external devices. Receive BLE information from external devices.
-Workout information is stored in an internal database that can then be referenced for further analysis. 
-Workout information can be uploaded to platforms like Strava by exporting a TCX file from VeloFree. 
-
-VeloFree supports the use by multiple users in a household.
-
-When used with a Peloton Bike Plus, VeloFree adjusts the resistance of the Peloton to match the grade of the route in Zwift rides. This is the only application available that does this without the use of external hardware. 
+VeloFree is an application that allows users of Peloton Bikes to:
+<ul>
+  <li>View the metrics of their activities while riding</li>
+  <li>Broadcasts activity metrics via BLE to external devices</li>
+  <li>Receive BLE information from external devices</li>
+  <li>Store workoout information in an internal database</li>
+  <li>Analyze workouts afterward</li>
+  <li>Export TCX files to sites like Strava</li>
+  <li>Supports the use of multiple users</li>
+  <li>When used with a bike plus, it integrates with Zwift to adjust resistance and create a realistic riding experience</li>
+</ul>  
 
 <H2>Instalation</H2>
 
