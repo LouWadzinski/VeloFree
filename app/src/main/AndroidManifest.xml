@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="onepeloton.permission.ACCESS_SENSOR_SERVICE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="onepeloton.permission.SUBSCRIPTION_TYPE_ACCESS" />
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <application android:requestLegacyExternalStorage="true"  />
+
+
+
+
+    <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"
+        />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+
+
+
+
+    <application
+        android:name=".VeloFreeApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/app_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.PTONOverlay"
+        tools:targetApi="31">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.PTONOverlay">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".HeartRateDeviceListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PTONOverlay"
+            android:label="Select Heart Rate Monitor"/>
+
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PTONOverlay"
+            android:label="History"/>
+
+        <activity
+            android:name=".HistoryActivityDetail"
+            android:exported="false"
+            android:theme="@style/Theme.PTONOverlay"
+            android:label="Activity Details"/>
+        <activity
+            android:name=".UserListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PTONOverlay"
+            android:label="Select User"/>
+        <activity
+            android:name=".UserConfigurationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PTONOverlay"
+            android:label="Select User"/>
+
+        <service
+            android:name=".overlay.OverlayService"
+            android:exported="true" />
+    </application>
+
+</manifest>
