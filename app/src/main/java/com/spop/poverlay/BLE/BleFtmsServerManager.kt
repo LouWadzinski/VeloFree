@@ -4,6 +4,7 @@ package com.spop.poverlay.BLE
 
 
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.bluetooth.le.AdvertiseCallback
@@ -11,12 +12,15 @@ import android.bluetooth.le.AdvertiseData
 import android.bluetooth.le.AdvertiseSettings
 import android.bluetooth.le.BluetoothLeAdvertiser
 import android.content.Context
+import android.os.ParcelUuid
 import android.util.Log
+import androidx.annotation.RequiresPermission
 import kotlinx.coroutines.flow.Flow
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
+
 
 class BleFtmsServerManager(private val context: Context ) {
 
@@ -54,42 +58,49 @@ class BleFtmsServerManager(private val context: Context ) {
         bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager?.adapter
         bluetoothLeAdvertiser = bluetoothAdapter?.bluetoothLeAdvertiser
-/*
-        val fixedRateTimer = fixedRateTimer(
-            name = "my-timer",
-            initialDelay = 1000L, // initial delay in milliseconds
-            period = 250L         // period between executions in milliseconds
-        ) {
-            // This block runs on a background thread
-            updateBikeData()
-        }
-
- */
+        BluetoothAdapter.getDefaultAdapter().setName("VeloFree")
     }
 
     suspend fun observePower(power: Flow<Float>) {
-        power.collect { value ->
-            //lastPower = 200
+        try {
+            power.collect { value ->
+                //lastPower = 200
 
 
-            lastPower = value.toInt()
-             updateBikeData()
+                lastPower = value.toInt()
+                updateBikeData()
+            }
+        }
+        catch (Exception: Exception)
+        {
+
         }
     }
 
     suspend fun observeCadence(cadence: Flow<Float>) {
+        try{
         cadence.collect { value ->
             lastCadence = value.toFloat()
             //updateBikeData()
         }
+        }
+        catch (Exception: Exception)
+        {
+
+        }
     }
 
     suspend fun observeSpeed(speed: Flow<Float>) {
-        speed.collect { value ->
-            lastSpeed = value.toFloat()
-            //updateBikeData()
+        try {
+            speed.collect { value ->
+                lastSpeed = value.toFloat()
+                //updateBikeData()
+            }
         }
-    }
+        catch (Exception: Exception)
+        {
+
+        }}
 
 
 
@@ -179,7 +190,7 @@ class BleFtmsServerManager(private val context: Context ) {
         val data = AdvertiseData.Builder()
             .setIncludeDeviceName(true)
 
-            .addServiceUuid(android.os.ParcelUuid(FTMS_SERVICE_UUID))
+            .addServiceUuid(ParcelUuid(FTMS_SERVICE_UUID))
             .build()
 
         bluetoothLeAdvertiser?.startAdvertising(settings, data, advertiseCallback)

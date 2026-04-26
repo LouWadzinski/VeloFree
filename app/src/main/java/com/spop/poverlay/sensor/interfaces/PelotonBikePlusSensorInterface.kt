@@ -3,22 +3,21 @@ package com.spop.poverlay.sensor.interfaces
 import android.content.Context
 import android.os.IBinder
 import android.os.Parcel
-import android.os.RemoteException
-import com.spop.poverlay.sensor.v2.BikePlusPowerSensor
-import com.spop.poverlay.sensor.v2.BikePlusResistanceSensor
-import com.spop.poverlay.sensor.v2.BikePlusRpmSensor
+import com.spop.poverlay.sensor.v2.BikePlusCombinedSensor
 import com.spop.poverlay.sensor.v2.getV2Binder
 import com.spop.poverlay.util.windowed
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import timber.log.Timber
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.transformLatest
 import kotlin.coroutines.CoroutineContext
 
 class PelotonBikePlusSensorInterface(val context: Context) : SensorInterface, CoroutineScope {
-    companion object {
+    companion object{
         /**
          * Resistance is filtered with a moving window since it occasionally spikes
          * The last few resistance readings will grouped, and the lowest reading will be shown
@@ -27,7 +26,6 @@ class PelotonBikePlusSensorInterface(val context: Context) : SensorInterface, Co
          */
         const val ResistanceMovingAverageWindowSize = 3
     }
-
     private val binder = MutableSharedFlow<IBinder>(replay = 1)
 
     init {
@@ -44,27 +42,25 @@ class PelotonBikePlusSensorInterface(val context: Context) : SensorInterface, Co
         coroutineContext.cancelChildren()
     }
 
-    override val power: Flow<Float>
-        get() = binder.flatMapLatest {
-            val powerSensor = BikePlusPowerSensor(it)
-            powerSensor.start()
-            powerSensor.sensorValue
+    private val combinedSensorState = binder.transformLatest { service ->
+        val sensor = BikePlusCombinedSensor(service)
+        sensor.start()
+        emit(sensor)
+        try {
+            awaitCancellation()
+        } finally {
+            sensor.stop()
         }
+    }.shareIn(this, SharingStarted.Lazily, 1)
+
+    override val power: Flow<Float>
+        get() = combinedSensorState.flatMapLatest { it.power }
 
     override val cadence: Flow<Float>
-        get() = binder.flatMapLatest {
-            val rpmSensor = BikePlusRpmSensor(it)
-            rpmSensor.start()
-            rpmSensor.sensorValue
-        }
-
+        get() = combinedSensorState.flatMapLatest { it.cadence }
 
     override val resistance: Flow<Float>
-        get() = binder.flatMapLatest {
-            val resistanceSensor = BikePlusResistanceSensor(it)
-            resistanceSensor.start()
-            resistanceSensor.sensorValue
-        }
+        get() = combinedSensorState.flatMapLatest { it.resistance }
             .windowed(ResistanceMovingAverageWindowSize, 1, true) { readings ->
                 // Resistance sensor occasionally spikes for a single reading
                 // So take the least of the last few readings
@@ -92,7 +88,7 @@ class PelotonBikePlusSensorInterface(val context: Context) : SensorInterface, Co
 
 
             } catch (e: Exception) {
-                Timber.e(e, "failed to set resistance")
+
             }
 
 

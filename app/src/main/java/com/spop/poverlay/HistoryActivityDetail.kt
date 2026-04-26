@@ -425,10 +425,11 @@ class HistoryActivityDetail : ComponentActivity() {
                 max = cursor.getFloat(1)
         }
         cursor.moveToFirst()
+        var counting  = cursor.count / 5
         while (cursor.moveToNext()) {
 
             //if (cursor.getInt(0) % 25 == 0)
-              if (  cursor.position == 1|| (cursor.position -1)%5 == 0)
+              if (  cursor.position == 1|| (cursor.position -1)%counting == 0)
                 hrBarChartData.add(
                     BarChartEntity(
                         cursor.getFloat(1) / max,

@@ -186,7 +186,7 @@ private fun StartServicePage(
 @Composable
 private fun PermissionPage(onClickedGrantPermission: () -> Unit) {
     Text(
-        text = "Grupetto Needs Permission To Draw Over Other Apps",
+        text = "VeloFree Needs Permission To Draw Over Other Apps",
 
         fontSize = 40.sp,
         fontStyle = FontStyle.Italic,

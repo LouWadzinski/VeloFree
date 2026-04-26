@@ -58,8 +58,10 @@ import com.spop.poverlay.VeloFreeApplication
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.spop.poverlay.overlay.StatCards.StatCardValues
+import com.spop.poverlay.sensor.CadenceWatchdog
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.minutes
 
 
 class OverlayService : LifecycleEnabledService() {
@@ -165,6 +167,11 @@ class OverlayService : LifecycleEnabledService() {
             DeadSensorDetector(sensorInterface, this.coroutineContext),
             onExit = { exit() }
         )
+
+        // Initialize and start watchdog (always enabled)
+        val watchdogThreshold = 30.minutes
+        val watchdog = CadenceWatchdog(sensorInterface, this.coroutineContext, watchdogThreshold)
+        watchdog.start()
 
         wm = getSystemService(WINDOW_SERVICE) as WindowManager
         buildDialog()

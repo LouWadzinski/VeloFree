@@ -2,7 +2,6 @@ package com.spop.poverlay.sensor;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 public class BikeData implements Parcelable {
     public static final Creator<BikeData> CREATOR = new Creator<BikeData>() {
@@ -96,15 +95,10 @@ public class BikeData implements Parcelable {
     }
 
     public int getCurrentResistance() {
-
         return this.mCurrentResistance;
     }
 
     public int getTargetResistance() {
-
-
-        //Log.d("resistance","target: " + this.mTargetResistance + " current: " + this.mCurrentResistance);
-
         return this.mTargetResistance;
     }
 
