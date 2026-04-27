@@ -8,12 +8,19 @@ private const val PelotonBrand = "Peloton"
 
 val IsRunningOnPeloton = Build.BRAND == PelotonBrand
 
+
+internal fun isG700CrossTrainerModel(model: String): Boolean {
+    return model.contains("G700", ignoreCase = true) || model.startsWith("PLTN-ATR", ignoreCase = true)
+}
+
+val IsG700CrossTrainer = isG700CrossTrainerModel(Build.MODEL)
 /**
  * I'm not sure if this is the best way to determine if the device is a Peloton Bike+.
  * I'm assuming that the model name is the same for all Peloton Bike+ devices based on what I'm able
  * to find online.
  */
-val IsBikePlus = Build.MODEL == "PLTN-TTR01"
+val IsBikePlus = Build.MODEL.contains("PLTN-T")|| IsG700CrossTrainer
+//val IsBikePlus = true
 
 fun calculateSpeedFromPelotonV1Power(power: Float) =
     if (power < 0.1f) {
